@@ -38,6 +38,14 @@ sysctl net.core.default_qdisc
 
 正常结果分别为 `bbr` 和 `fq`。
 
+## 已部署服务器仅开启 BBR
+
+如果 VMess 已经部署完成，不要重新运行主安装脚本。使用下面的命令只开启 BBR，不会修改 UUID、端口或 Xray 配置：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wkx176617-sys/vmess-oneclick/main/enable-bbr.sh | sudo bash
+```
+
 ## 兼容参数
 
 - 协议：VMess
