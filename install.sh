@@ -143,7 +143,9 @@ if [[ -z "$PUBLIC_IP" ]]; then
 fi
 [[ -n "$PUBLIC_IP" ]] || PUBLIC_IP="请填写服务器公网IP"
 
-VMESS_JSON="$(printf '{"v":"2","ps":"Ubuntu-VMess","add":"%s","port":"%s","id":"%s","aid":"0","scy":"auto","net":"tcp","type":"none","host":"","path":"","tls":""}' "$PUBLIC_IP" "$PORT" "$UUID")"
+# 使用字段最精简的 VMess 分享格式，兼容 v2rayN V3、Shadowrocket 和 v2rayNG。
+# scy 缺省时客户端按 VMess 分享规范使用 auto。
+VMESS_JSON="$(printf '{"v":"2","ps":"Ubuntu-VMess","add":"%s","port":"%s","id":"%s","aid":"0","net":"tcp","type":"none","host":"","path":"/","tls":""}' "$PUBLIC_IP" "$PORT" "$UUID")"
 VMESS_LINK="vmess://$(printf '%s' "$VMESS_JSON" | base64 -w 0)"
 
 printf '\n'
@@ -157,9 +159,9 @@ printf '传输协议：  TCP\n'
 printf 'TLS：       关闭\n'
 printf 'BBR：       %s\n' "$BBR_STATUS"
 printf '%s\n' "----------------------------------------"
-printf 'V2Ray 导入链接：\n%s\n' "$VMESS_LINK"
+printf '兼容 v2rayN V3 / Shadowrocket 的导入链接：\n%s\n' "$VMESS_LINK"
 printf '%s\n' "----------------------------------------"
-printf '使用 v2rayNG、v2rayN 或其他兼容客户端扫描二维码导入：\n\n'
+printf '使用 v2rayN、v2rayNG、Shadowrocket（小火箭）扫描二维码导入：\n\n'
 printf '%s' "$VMESS_LINK" | qrencode -t ANSIUTF8 -m 2
 printf '\n%s\n' "----------------------------------------"
 printf '请确认云服务商安全组已开放 TCP %s 端口。\n' "$PORT"

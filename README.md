@@ -10,7 +10,7 @@ SSH 登录服务器后，粘贴下面的命令并按回车：
 curl -fsSL https://raw.githubusercontent.com/wkx176617-sys/vmess-oneclick/main/install.sh | sudo bash
 ```
 
-部署完成后，可以复制终端输出的 `vmess://` 链接，或直接使用 v2rayN、v2rayNG 等兼容客户端扫描终端二维码导入。
+部署完成后，可以复制终端输出的 `vmess://` 链接，或直接使用 v2rayN、v2rayNG、Shadowrocket（小火箭）扫描终端二维码导入。
 
 还需要在云服务商控制台的安全组中开放 TCP `10086` 端口。
 
@@ -49,10 +49,20 @@ curl -fsSL https://raw.githubusercontent.com/wkx176617-sys/vmess-oneclick/main/e
 ## 兼容参数
 
 - 协议：VMess
+- 分享格式：`vmess://` Base64 JSON，配置版本 `v=2`
 - 传输：TCP
 - alterId：0
 - 加密：auto
 - TLS：关闭
+
+已针对以下客户端使用通用字段生成链接和二维码：
+
+- v2rayN V3 系列
+- 新版 v2rayN
+- v2rayNG
+- Shadowrocket（小火箭）
+
+`alterId=0` 使用 VMess AEAD，因此 v2rayN V3 所调用的 V2Ray/Xray 核心需要支持 VMess AEAD（V2Ray Core 4.28.1 或更高版本）。年代更早的非 AEAD 核心不在兼容范围内。
 
 ## 安全说明
 
