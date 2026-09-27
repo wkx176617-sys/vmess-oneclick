@@ -1,6 +1,6 @@
 # Ubuntu 24.04 VMess 一键部署
 
-适用于 Ubuntu 24.04 64 位服务器。脚本会安装官方 Xray、自动生成 UUID、创建 VMess TCP 配置、启动服务，并输出可导入 v2rayN/v2rayNG 的 `vmess://` 链接。
+适用于 Ubuntu 24.04 64 位服务器。脚本会安装官方 Xray、启用 BBR 网络加速、自动生成 UUID、创建 VMess TCP 配置、启动服务，并输出可导入 v2rayN/v2rayNG 的 `vmess://` 链接。
 
 ## 一键安装
 
@@ -29,6 +29,15 @@ sudo systemctl status xray
 sudo journalctl -u xray -n 100 --no-pager
 ```
 
+检查 BBR 是否启用：
+
+```bash
+sysctl net.ipv4.tcp_congestion_control
+sysctl net.core.default_qdisc
+```
+
+正常结果分别为 `bbr` 和 `fq`。
+
 ## 兼容参数
 
 - 协议：VMess
@@ -41,6 +50,7 @@ sudo journalctl -u xray -n 100 --no-pager
 
 - 脚本仅支持 Ubuntu 24.04 x86_64。
 - 如果服务器已有 Xray 配置，脚本会先在同一目录创建带时间戳的备份。
+- BBR 配置保存在 `/etc/sysctl.d/99-vmess-bbr.conf`；已有同名配置时会先创建带时间戳的备份。
 - 脚本不会自动启用 UFW；如果 UFW 已启用，只会添加当前 VMess 端口。
 - VMess TCP 适合简单、兼容性优先的部署。对抗干扰或长期公网使用时，建议改用带传输层安全保护的方案。
 - 请遵守服务器所在地及使用所在地的法律法规和服务条款。

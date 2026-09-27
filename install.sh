@@ -5,6 +5,7 @@ set -Eeuo pipefail
 readonly DEFAULT_PORT="10086"
 readonly XRAY_CONFIG="/usr/local/etc/xray/config.json"
 readonly XRAY_INSTALL_URL="https://github.com/XTLS/Xray-install/raw/main/install-release.sh"
+readonly BBR_CONFIG="/etc/sysctl.d/99-vmess-bbr.conf"
 
 info() {
   printf '\033[1;34m[信息]\033[0m %s\n' "$*"
@@ -49,6 +50,24 @@ apt-get install -y -qq curl ca-certificates >/dev/null
 
 info "启用系统时间同步……"
 timedatectl set-ntp true || true
+
+info "启用 BBR 网络加速……"
+if modprobe tcp_bbr 2>/dev/null; then
+  if [[ -f "$BBR_CONFIG" ]]; then
+    cp -a "$BBR_CONFIG" "${BBR_CONFIG}.backup.$(date +%Y%m%d-%H%M%S)"
+  fi
+  cat >"$BBR_CONFIG" <<'EOF'
+net.core.default_qdisc=fq
+net.ipv4.tcp_congestion_control=bbr
+EOF
+  if sysctl --system >/dev/null 2>&1 && [[ "$(sysctl -n net.ipv4.tcp_congestion_control)" == "bbr" ]]; then
+    BBR_STATUS="已启用"
+  else
+    BBR_STATUS="启用失败，请检查内核和 sysctl 日志"
+  fi
+else
+  BBR_STATUS="当前内核不支持"
+fi
 
 info "从 XTLS 官方仓库安装 Xray……"
 INSTALLER="$(mktemp)"
@@ -136,6 +155,7 @@ printf 'UUID：      %s\n' "$UUID"
 printf 'alterId：   0\n'
 printf '传输协议：  TCP\n'
 printf 'TLS：       关闭\n'
+printf 'BBR：       %s\n' "$BBR_STATUS"
 printf '%s\n' "----------------------------------------"
 printf 'V2Ray 导入链接：\n%s\n' "$VMESS_LINK"
 printf '%s\n' "----------------------------------------"
