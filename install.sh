@@ -46,7 +46,7 @@ fi
 info "安装基础组件……"
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq
-apt-get install -y -qq curl ca-certificates >/dev/null
+apt-get install -y -qq curl ca-certificates qrencode >/dev/null
 
 info "启用系统时间同步……"
 timedatectl set-ntp true || true
@@ -159,4 +159,7 @@ printf 'BBR：       %s\n' "$BBR_STATUS"
 printf '%s\n' "----------------------------------------"
 printf 'V2Ray 导入链接：\n%s\n' "$VMESS_LINK"
 printf '%s\n' "----------------------------------------"
+printf '使用 v2rayNG、v2rayN 或其他兼容客户端扫描二维码导入：\n\n'
+printf '%s' "$VMESS_LINK" | qrencode -t ANSIUTF8 -m 2
+printf '\n%s\n' "----------------------------------------"
 printf '请确认云服务商安全组已开放 TCP %s 端口。\n' "$PORT"

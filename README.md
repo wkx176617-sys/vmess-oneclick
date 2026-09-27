@@ -1,6 +1,6 @@
 # Ubuntu 24.04 VMess 一键部署
 
-适用于 Ubuntu 24.04 64 位服务器。脚本会安装官方 Xray、启用 BBR 网络加速、自动生成 UUID、创建 VMess TCP 配置、启动服务，并输出可导入 v2rayN/v2rayNG 的 `vmess://` 链接。
+适用于 Ubuntu 24.04 64 位服务器。脚本会安装官方 Xray、启用 BBR 网络加速、自动生成 UUID、创建 VMess TCP 配置、启动服务，并输出可导入 v2rayN/v2rayNG 的 `vmess://` 链接和终端二维码。
 
 ## 一键安装
 
@@ -10,7 +10,7 @@ SSH 登录服务器后，粘贴下面的命令并按回车：
 curl -fsSL https://raw.githubusercontent.com/wkx176617-sys/vmess-oneclick/main/install.sh | sudo bash
 ```
 
-部署完成后，复制终端输出的 `vmess://` 链接，导入 v2rayN、v2rayNG 或其他兼容客户端。
+部署完成后，可以复制终端输出的 `vmess://` 链接，或直接使用 v2rayN、v2rayNG 等兼容客户端扫描终端二维码导入。
 
 还需要在云服务商控制台的安全组中开放 TCP `10086` 端口。
 
